@@ -1,15 +1,98 @@
-//your variable declarations here
-public void setup() 
-{
-  //your code here
+SpaceShip shp = new SpaceShip();
+Star [] st;
+public void setup() {
+	size(600, 600);
+  st = new Star[100];
+  for(int i=0; i<99; i++)
+    st[i]=new Star();
 }
-public void draw() 
-{
-  //your code here
+public void draw(){
+  background(0, 0, 0);
+  for(int i=0; i<99; i++)
+    st[i].show();
+  shp.show();
+  shp.move();    
 }
-class SpaceShip //extends Floater  
+class SpaceShip extends Floater  
 {   
-    //your code here
+    public SpaceShip(){
+    	myColor=255;
+    	corners=3;
+    	xCorners=new int[corners];
+    	yCorners=new int[corners];
+    	xCorners[0]=-8;
+    	yCorners[0]=-8;
+    	xCorners[1]=16;
+    	yCorners[1]=0;
+    	xCorners[2]=-8;
+    	yCorners[2]=8;
+    	myCenterX=300;
+    	myCenterY=300;
+    	myDirectionX=0;
+    	myDirectionY=0;
+    	myPointDirection=0;
+    }
+    public void setX(int x){
+    	myCenterX=x;
+    }
+    public int getX(){
+    	return (int)myCenterX;
+    }
+    public void setY(int y){
+    	myCenterY= y;
+    }
+    public int getY(){
+    	return (int)myCenterY;
+    }
+    public void setDirectionX(double x){
+    	myDirectionX=x;
+    }
+    public double getDirectionX(){
+    	return myDirectionX;
+    }
+    public void setDirectionY(double y){
+    	myDirectionY=y;
+    }
+    public double getDirectionY(){
+    	return myDirectionY;
+    }
+    public void setPointDirection(int degrees){
+    	myPointDirection=degrees;
+    }
+    public double getPointDirection(){
+    	return myPointDirection;
+    }
+}
+public void keyPressed(){
+  if(key=='w'){
+    shp.accelerate(1);
+  }
+  if(key=='s'){
+    shp.accelerate(-1);
+  }
+  if(key=='a'){
+    shp.rotate(5);
+  }
+  if(key=='d'){
+    shp.rotate(-5);
+  }
+  if(key=='t'){
+    shp.setX((int)(Math.random()*600));
+    shp.setY((int)(Math.random()*600));
+    shp.setDirectionY(0);
+    shp.setDirectionX(0);
+    shp.setPointDirection((int)(Math.random()*360));
+  }
+}
+class Star{
+  private int x, y;
+  public Star (){}
+  void show(){
+    x=(int)(Math.random()*600);
+    y=(int)(Math.random()*600);
+    fill(255,0,0);
+    ellipse(x, y, 10, 10);
+  }
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
