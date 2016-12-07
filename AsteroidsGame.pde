@@ -1,25 +1,59 @@
 SpaceShip shp = new SpaceShip();
 Star[] st;
-Asteroids[] ast;
+ArrayList <Asteroids> ast;
+ArrayList <Bullet> bu;
 public void setup() {
 	size(600, 600);
+  ast = new ArrayList <Asteroids>();
+  bu = new ArrayList <Bullet>();
   st = new Star[100];
-  ast= new Asteroids[30];
   for(int i=0; i<99; i++)
     st[i]=new Star();
-  for(int i=0; i<29; i++)
-    ast[i]=new Asteroids();
+  for(int i=0; i<19; i++){
+    ast.add(new Asteroids());
+  }
 }
 public void draw(){
   background(0, 0, 0);
-  for(int i=0; i<99; i++)
-    st[i].show();
-  for(int i=0; i<29; i++){
-    ast[i].show();    
-    ast[i].move();
-  }
   shp.show();
   shp.move();    
+  for(int i=0; i<99; i++)
+    st[i].show();
+  for(int i=0; i<ast.size(); i++){
+    ast.get(i).show();    
+    ast.get(i).move();
+  }
+  for(int i=0; i<bu.size();i++){
+    if(ast.size()>0){
+      for(int j=0; j<ast.size();j++){
+        if(dist(bu.get(i).getX(),bu.get(i).getY(),ast.get(j).getX(),ast.get(j).getY())<15){
+          ast.remove(j);
+          bu.remove(i);
+          break;
+        }
+        if(bu.get(i).getX()>600){
+          bu.remove(i);
+          break;
+        }
+        if(bu.get(i).getX()<0){
+          bu.remove(i);
+          break;
+        }
+        if(bu.get(i).getY()>600){
+          bu.remove(i);
+          break;
+        }
+        if(bu.get(i).getY()<0){
+          bu.remove(i);
+          break;
+        }
+        else {
+          bu.get(i).show();
+          bu.get(i).move();
+        }
+      }
+    }
+  }
 }
 class Star{
   private int x, y;
@@ -88,10 +122,10 @@ public void keyPressed(){
   if(key=='s'){
     shp.accelerate(-1);
   }
-  if(key=='a'){
+  if(key=='d'){
     shp.rotate(5);
   }
-  if(key=='d'){
+  if(key=='a'){
     shp.rotate(-5);
   }
   if(key=='t'){
@@ -100,6 +134,9 @@ public void keyPressed(){
     shp.setDirectionY(0);
     shp.setDirectionX(0);
     shp.setPointDirection((int)(Math.random()*360));
+  }
+  if(key=='r'){
+    bu.add(new Bullet(shp));
   }
 }
 class Asteroids extends Floater
@@ -234,6 +271,53 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
       vertex(xRotatedTranslated,yRotatedTranslated);    
     }   
     endShape(CLOSE);  
-  }   
-} 
+  }
+}
+  public class Bullet extends Floater{
+  public Bullet(SpaceShip shp){
+     myCenterX=shp.getX();
+     myCenterY=shp.getY();
+     myPointDirection=shp.getPointDirection();
+     double dRadians=myPointDirection*(Math.PI/180);
+     myDirectionX=3*Math.cos(dRadians)+shp.getDirectionX();
+     myDirectionY=3*Math.sin(dRadians)+shp.getDirectionY();
+     myColor=color(0,0,255);
+  }
+    public void setX(int x){
+      myCenterX=x;
+    }
+    public int getX(){
+      return (int)myCenterX;
+    }
+    public void setY(int y){
+      myCenterY= y;
+    }
+    public int getY(){
+      return (int)myCenterY;
+    }
+    public void setDirectionX(double x){
+      myDirectionX=x;
+    }
+    public double getDirectionX(){
+      return myDirectionX;
+    }
+    public void setDirectionY(double y){
+      myDirectionY=y;
+    }
+    public double getDirectionY(){
+      return myDirectionY;
+    }
+    public void setPointDirection(int degrees){
+      myPointDirection=degrees;
+    }
+    public double getPointDirection(){
+      return myPointDirection;
+    }
+    public void show(){
+      fill(myColor);
+      stroke(myColor);
+      ellipse((float)myCenterX,(float)myCenterY,(int)3,(int)3);
+    }  
+  }
+
 
